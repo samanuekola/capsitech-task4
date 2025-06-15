@@ -3,16 +3,12 @@ const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const { URL } = require('url');
+
 const SECRET = 'MY_SECRET';
 
-const PORT = process.env.PORT || 4000;
-
-mongoose.connect("mongodb+srv://samanuesam:samanue123@cluster0.jkqgpvi.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
-.then(() => console.log('MongoDB connected'))
-.catch(err => console.error('MongoDB connection error:', err));
+mongoose.connect('mongodb+srv://samanuesam:samanue123@cluster0.jkqgpvi.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
+    .then(() => console.log('MongoDB connected'))
+    .catch(err => console.error('MongoDB connection error:', err));
 
 const userSchema = new mongoose.Schema({
     username: String,
@@ -58,6 +54,11 @@ const server = http.createServer(async (req, res) => {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
 
     if (req.method === 'OPTIONS') return res.end();
+
+    if (path === '/' && req.method === 'GET') {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ status: 'OK' }));
+    }
 
     if (path === '/register' && req.method === 'POST') {
         const { username, password } = await parseBody(req);
@@ -106,6 +107,6 @@ const server = http.createServer(async (req, res) => {
     res.writeHead(404).end('Not found');
 });
 
-server.listen(PORT, '0.0.0.0', () => {
-    console.log(`Backend running on port ${PORT}`);
-});
+const PORT = process.env.PORT || 4000;
+
+server.listen(PORT, '0.0.0.0', () => console.log(`Backend running on port ${PORT}`));
