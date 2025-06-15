@@ -3,14 +3,15 @@ const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const { URL } = require('url');
-
 const SECRET = 'MY_SECRET';
+
 mongoose.connect("mongodb+srv://samanuesam:samanue123@cluster0.jkqgpvi.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
 
 const userSchema = new mongoose.Schema({
   username: String,
   password: String,
 });
+
 const dataSchema = new mongoose.Schema({
   name: String,
   age: Number,
@@ -45,9 +46,8 @@ const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`);
   const path = url.pathname;
 
-  // CORS
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Headers', '*');
+  res.setHeader('Access-Control-Allow-Origin', '');
+  res.setHeader('Access-Control-Allow-Headers', '');
   res.setHeader('Access-Control-Allow-Methods', '*');
   if (req.method === 'OPTIONS') return res.end();
 
@@ -71,20 +71,17 @@ const server = http.createServer(async (req, res) => {
   const user = await authenticate(req, res);
   if (!user) return;
 
-  // CRUD: Create
   if (path === '/data' && req.method === 'POST') {
     const { name, age, email, hobby } = await parseBody(req);
     const entry = await Data.create({ name, age, email, hobby, userId: user.id });
     return res.end(JSON.stringify(entry));
   }
 
-  // CRUD: Read
   if (path === '/data' && req.method === 'GET') {
     const items = await Data.find({ userId: user.id });
     return res.end(JSON.stringify(items));
   }
 
-  // CRUD: Update
   if (path.startsWith('/data/') && req.method === 'PUT') {
     const id = path.split('/')[2];
     const updates = await parseBody(req);
@@ -92,7 +89,6 @@ const server = http.createServer(async (req, res) => {
     return res.end(JSON.stringify(updated));
   }
 
-  // CRUD: Delete
   if (path.startsWith('/data/') && req.method === 'DELETE') {
     const id = path.split('/')[2];
     await Data.findOneAndDelete({ _id: id, userId: user.id });
@@ -102,4 +98,5 @@ const server = http.createServer(async (req, res) => {
   res.writeHead(404).end('Not found');
 });
 
-server.listen(4000, () => console.log('Backend on http://localhost:4000'));
+const PORT = process.env.PORT || 4000;
+server.listen(PORT, () => console.log(`Backend running on port ${PORT}`));
