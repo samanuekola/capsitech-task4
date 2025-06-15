@@ -23,7 +23,7 @@ export default function Dashboard() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch('http://localhost:4000/data', {
+      const res = await fetch('https://capsitech-task4.onrender.com/data', {
         headers: { Authorization: 'Bearer ' + token },
       });
       if (!res.ok) {
@@ -43,8 +43,8 @@ export default function Dashboard() {
     setError(null);
     const method = editingId ? 'PUT' : 'POST';
     const url = editingId
-      ? `http://localhost:4000/data/${editingId}`
-      : 'http://localhost:4000/data';
+      ? `https://capsitech-task4.onrender.com/data/${editingId}`
+      : 'https://capsitech-task4.onrender.com/data';
     try {
       const res = await fetch(url, {
         method,
@@ -73,7 +73,7 @@ export default function Dashboard() {
       return;
     }
     try {
-      const res = await fetch(`http://localhost:4000/data/${id}`, {
+      const res = await fetch(`https://capsitech-task4.onrender.com/data/${id}`, {
         method: 'DELETE',
         headers: { Authorization: 'Bearer ' + token },
       });

@@ -10,7 +10,7 @@ export default function Register() {
   const handleRegister = async e => {
     e.preventDefault();
     try {
-      const res = await fetch('http://localhost:4000/register', {
+      const res = await fetch('https://capsitech-task4.onrender.com/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
@@ -24,7 +24,7 @@ export default function Register() {
         alert('Registration failed. Please try a different username or password.');
       }
     } catch (error) {
-      alert(error)
+      alert('Something went wrong: ' + error.message);
     }
   };
 

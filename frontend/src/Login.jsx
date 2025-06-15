@@ -12,7 +12,7 @@ export default function Login() {
     e.preventDefault();
     setLoginError(false);
     try {
-      const res = await fetch('http://localhost:4000/login', {
+      const res = await fetch('https://capsitech-task4.onrender.com/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
